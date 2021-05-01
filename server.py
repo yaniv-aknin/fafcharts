@@ -35,6 +35,14 @@ class PlotFlask(Flask):
 
 app = PlotFlask(__name__)
 
+def load_df(parquet_path, app):
+    df = pd.read_parquet(parquet_path)
+    for prefix in ('player1.player.', 'player2.player.'):
+        df[prefix + 'faf_rating.before'] = df[prefix + 'trueskill_mean_before'] - 3 * df[prefix + 'trueskill_deviation_before']
+    df['player1.rating_bucket'] = pd.cut(df['player1.player.faf_rating.before'], bins=5)
+    with app.app_context():
+        current_app.df = df
+
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument('parquet')
@@ -63,10 +71,5 @@ def apm_over_time():
 
 if __name__ == '__main__':
     options = parse_arguments(sys.argv)
-    df = pd.read_parquet(options.parquet)
-    for prefix in ('player1.player.', 'player2.player.'):
-        df[prefix + 'faf_rating.before'] = df[prefix + 'trueskill_mean_before'] - 3 * df[prefix + 'trueskill_deviation_before']
-    df['player1.rating_bucket'] = pd.cut(df['player1.player.faf_rating.before'], bins=5)
-    with app.app_context():
-        current_app.df = df
+    load_df(options.parquet, app)
     app.run(debug=True)
