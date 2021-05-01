@@ -24,7 +24,7 @@ class PlotFlask(Flask):
                 if not isinstance(ax, Axes):
                     raise ValueError("expected a matplotlib Axes instance")
                 image = io.BytesIO()
-                ax.figure.set_size_inches(15, 10)
+                ax.figure.set_size_inches(10, 5)
                 ax.figure.savefig(image)
                 image.seek(0)
                 if current_app.debug:
@@ -37,8 +37,6 @@ app = PlotFlask(__name__)
 
 def load_df(parquet_path, app):
     df = pd.read_parquet(parquet_path)
-    for prefix in ('player1.player.', 'player2.player.'):
-        df[prefix + 'faf_rating.before'] = df[prefix + 'trueskill_mean_before'] - 3 * df[prefix + 'trueskill_deviation_before']
     df['player1.rating_bucket'] = pd.cut(df['player1.player.faf_rating.before'], bins=5)
     with app.app_context():
         current_app.df = df
