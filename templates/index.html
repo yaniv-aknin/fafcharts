@@ -1,0 +1,37 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>fafalytics</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        li.mode {display: inline;}
+    </style>
+    <script>
+        function init() {
+            $(".mode").click(function() {
+                $.ajax({url: "/charts?" + $('input').serialize()}).done(function(data) {
+                    $("#body").empty();
+                    data.charts.forEach(function (item) {
+                        img = document.createElement("img");
+                        img.setAttribute("src", item);
+                        $("#body").append(img);
+                    });
+                });
+            });
+        };
+    </script>
+</head>
+<body onload="init()">
+    <div id="header" style="background: #eee; font-size: 24px;">
+        <ul>
+            <li class="mode"><label><input type="radio" name="mode" value="multi">Multiple Games</label></li>
+            <li class="mode"><label><input type="radio" name="mode" value="single">Single Game</label></li>
+            <li class="mode"><label><input type="radio" name="mode" value="player">Player history</label></li>
+        </ul>
+    </div>
+    <div id="body">
+    </div>
+</body>
+</html>
