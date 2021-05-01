@@ -11,7 +11,7 @@
     <script>
         function init() {
             $(".mode").click(function() {
-                $.ajax({url: "/charts?" + $('input').serialize()}).done(function(data) {
+                $.ajax({url: "/charts", data: { mode: $("li input:checked").val() }}).done(function(data) {
                     $("#body").empty();
                     data.charts.forEach(function (item) {
                         img = document.createElement("img");
