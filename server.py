@@ -4,10 +4,10 @@ import argparse
 import sys
 import io
 import functools
-import warnings
-warnings.filterwarnings('ignore', module='.*seaborn.*', message='.*Starting a Matplotlib GUI outside of the main thread will likely fail.*')
 
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib.axes import Axes
 import seaborn as sns
 sns.set()
